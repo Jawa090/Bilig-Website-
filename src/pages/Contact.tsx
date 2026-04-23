@@ -1,7 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Lock, ShieldCheck, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Helmet } from "react-helmet-async";
 
@@ -16,6 +16,25 @@ const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", phone: "", practice: "", specialty: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  // Check for payment success
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get('success');
+    const plan = urlParams.get('plan');
+    const service = urlParams.get('service');
+    
+    if (success === 'true' && plan && service) {
+      toast({
+        title: "🎉 Payment Successful!",
+        description: `Thank you for subscribing to the ${plan} plan for ${decodeURIComponent(service)}. Our team will contact you within 24 hours to get started.`,
+        duration: 8000,
+      });
+      
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [toast]);
 
   const origin = typeof window !== "undefined" ? window.location.origin : "https://optimumsolution.com";
   const canonical = `${origin}/contact/`;
@@ -39,7 +58,10 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:5001/api/contact', {
+      // Get API URL from environment variable
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+      
+      const response = await fetch(`${apiUrl}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,8 +80,8 @@ const Contact = () => {
 
       if (response.ok) {
         toast({
-          title: "Message Sent Successfully!",
-          description: "Thank you for contacting us. We'll get back to you within 24 hours.",
+          title: "✅ Message Sent Successfully!",
+          description: "Thank you for reaching out! Our billing specialist will review your inquiry and get back to you within 24 hours. Check your email for a confirmation.",
         });
         
         // Reset form
@@ -148,9 +170,19 @@ const Contact = () => {
               <button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full bg-gradient-green text-primary-foreground py-3 rounded-xl font-bold hover:scale-[1.02] transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-green text-primary-foreground py-3 rounded-xl font-bold hover:scale-[1.02] transition-transform disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                {isSubmitting ? "Sending..." : "Send Message"}
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Sending Your Message...
+                  </>
+                ) : (
+                  "Send Message"
+                )}
               </button>
             </form>
 

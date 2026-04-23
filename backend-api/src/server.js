@@ -6,6 +6,7 @@ import compression from 'compression';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import contactRoutes from './routes/contactRoutes.js';
+import stripeRoutes from './routes/stripeRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 // Load environment variables
@@ -62,6 +63,7 @@ app.get('/api/health', (req, res) => {
 
 // API Routes
 app.use('/api/contact', contactRoutes);
+app.use('/api/stripe', stripeRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -71,7 +73,8 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     endpoints: {
       health: '/api/health',
-      contact: '/api/contact'
+      contact: '/api/contact',
+      stripe: '/api/stripe'
     }
   });
 });
