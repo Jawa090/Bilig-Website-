@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import {
   Heart, Check, ArrowRight, Phone, FileText, Shield, TrendingUp, Clock,
   ChevronDown, ChevronUp, CheckCircle2, AlertCircle, Star, Users
@@ -118,18 +119,31 @@ const faqs = [
 const Cardiology = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  useEffect(() => {
-    document.title = "Cardiology Medical Billing Services | CPT Coding Specialists | Optimum Billing Solutions";
-    let meta = document.querySelector('meta[name="description"]');
-    if (!meta) { meta = document.createElement("meta"); (meta as HTMLMetaElement).name = "description"; document.head.appendChild(meta); }
-    meta.setAttribute("content", "Expert cardiology billing services for interventional cardiologists, electrophysiologists, and cardiovascular practices. PCI, TAVR, EP study, cath lab, and echocardiography billing with 98.2% first-pass rate. Prior auth, denial appeals, and LCD compliance.");
-    let kw = document.querySelector('meta[name="keywords"]');
-    if (!kw) { kw = document.createElement("meta"); (kw as HTMLMetaElement).name = "keywords"; document.head.appendChild(kw); }
-    kw.setAttribute("content", "cardiology medical billing, interventional cardiology billing, cardiac catheterization billing, CPT coding cardiology, echocardiography billing, EP study billing, TAVR billing, cardiology denial management, prior authorization cardiology");
-  }, []);
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://optimumsolution.com";
+  const canonical = `${origin}/specialities/cardiology/`;
+  const title = "Cardiology Medical Billing Services | CPT Coding Specialists | Optimum Solution";
+  const description = "Expert cardiology billing services for interventional cardiologists, electrophysiologists, and cardiovascular practices. PCI, TAVR, EP study, cath lab, and echocardiography billing with 98.2% first-pass rate. Prior auth, denial appeals, and LCD compliance.";
+  const keywords = "cardiology medical billing, interventional cardiology billing, cardiac catheterization billing, CPT coding cardiology, echocardiography billing, EP study billing, TAVR billing, cardiology denial management, prior authorization cardiology";
+  const image = `${origin}/1.png`;
 
   return (
     <Layout>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={keywords} />
+        <meta name="robots" content="index,follow,max-image-preview:large" />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={image} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+      </Helmet>
       {/* HERO */}
       <section className="bg-gradient-hero py-28 text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">

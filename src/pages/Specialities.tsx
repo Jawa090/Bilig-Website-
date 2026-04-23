@@ -2,6 +2,7 @@ import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Stethoscope, Brain, Heart, Baby, Bone, Microscope, Activity, Eye, Users, ShieldCheck, Home, Clock, Zap, HeartHandshake, ArrowRight, Phone } from "lucide-react";
 
 const specialities = [
@@ -24,8 +25,32 @@ const specialities = [
 const Specialities = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://optimumsolution.com";
+  const canonical = `${origin}/specialities/`;
+  const title = "Medical Specialties We Serve | 14+ Specialties | Optimum Solution";
+  const description = "Expert medical billing for 14+ specialties: Cardiology, Neurology, Pediatrics, Orthopedics, Mental Health, Physical Therapy, and more. Specialty-specific billing expertise.";
+  const keywords = "medical specialties billing, cardiology billing, neurology billing, pediatrics billing, orthopedics billing, mental health billing, specialty medical billing";
+  const image = `${origin}/1.png`;
+
   return (
     <Layout>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={keywords} />
+        <meta name="robots" content="index,follow,max-image-preview:large" />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={image} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+      </Helmet>
+      
       <section className="bg-gradient-hero py-20 text-center">
         <div className="container mx-auto px-6">
           <p className="text-xs uppercase tracking-[0.1em] font-semibold text-secondary mb-3">SPECIALITIES</p>

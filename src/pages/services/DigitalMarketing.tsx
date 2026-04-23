@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import {
   Globe, TrendingUp, Target, BarChart3, ChevronDown, ChevronUp,
   ArrowRight, Check, Star, Zap, Award, Search, Mail, Users,
@@ -134,19 +135,31 @@ const channels = [
 const DigitalMarketing = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  useEffect(() => {
-    document.title = "Digital Marketing Services | Optimum Billing Solutions";
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) {
-      meta.setAttribute(
-        "content",
-        "Full-spectrum digital marketing services including SEO, Google Ads, social media advertising, email marketing, and content marketing to grow your business online."
-      );
-    }
-  }, []);
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://optimumsolution.com";
+  const canonical = `${origin}/services/digital-marketing/`;
+  const title = "Digital Marketing Services | SEO, Google Ads & Social Media | Optimum Solution";
+  const description = "Full-spectrum digital marketing services including SEO, Google Ads, social media advertising, email marketing, and content marketing to grow your business online. 4.2x average ROAS.";
+  const keywords = "digital marketing, SEO services, Google Ads, PPC management, social media marketing, email marketing, content marketing, Facebook ads, LinkedIn marketing";
+  const image = `${origin}/1.png`;
 
   return (
     <Layout>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={keywords} />
+        <meta name="robots" content="index,follow,max-image-preview:large" />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={image} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+      </Helmet>
       {/* Hero */}
       <section className="bg-gradient-hero py-24 text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">

@@ -613,6 +613,57 @@ const DentalServices = () => {
         </div>
       </section>
 
+      {/* ── GIVE YOUR PRACTICE A BOOST ── */}
+      <section className="py-24 bg-slate-50">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl md:text-4xl font-bold text-dark mb-4">Give Your Practice A Boost</h2>
+            <p className="text-slate-500 max-w-xl mx-auto">We will help your practice reach its highest potential.</p>
+          </div>
+
+          {/* Content */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            {[
+              {
+                title: "Dental SEO",
+                desc: "Our dental SEO experts will bring your website within reach of your potential patients, at no added cost of advertisement. Reach more patients looking out for dental treatments with EZDDS dental SEO services."
+              },
+              {
+                title: "Dental PPC Advertising",
+                desc: "We combine great SEO with smart dental PPC management (pay-per-click advertising) to get your website at the top of your potential patients' search results and bring newer patients into your clinic."
+              },
+              {
+                title: "Dental Website Development",
+                desc: "Get a stunning dental website design to captivates the visitors reading about your practice through your SEO and PPC. Our expert dental website designers create attractive and functional dental websites that quickly convert your visitors into patient appointments."
+              },
+              {
+                title: "Branding and Design",
+                desc: "EZDDS creates the logo and brand identity that is a true reflection of the values and vision of your dental practice. Distinguish yourself from your competition and attract more patients with incredible designs."
+              },
+              {
+                title: "Dental Social Media Marketing",
+                desc: "With latest techniques in social media for dental offices, EZDDS creates a social media dental marketing strategy designed to attract and convert potential patients near you."
+              }
+            ].map((service, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all text-center"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <Activity size={24} className="text-primary" />
+                </div>
+                <h3 className="font-bold text-dark text-base mb-3">{service.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{service.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── TESTIMONIALS ── */}
       <section className="py-24 bg-slate-50">
         <div className="container mx-auto px-6 max-w-6xl">
@@ -711,6 +762,267 @@ const DentalServices = () => {
                     {faq.a}
                   </motion.div>
                 )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── PRICING SECTIONS ── */}
+      
+      {/* ── DENTAL BILLING PRICING ── */}
+      <section className="py-24 bg-gradient-to-br from-slate-50 to-white">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="text-center mb-16">
+            <div className="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase mb-6">
+              Pricing Plans
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black text-dark mb-6 leading-tight">
+              Dental Billing Services <span className="text-primary italic">Pricing</span>
+            </h2>
+            <p className="text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed">
+              Transparent pricing based on your practice size and volume
+            </p>
+          </div>
+
+          {/* Tabs */}
+          <div className="flex flex-wrap justify-center gap-4 mb-16">
+            {["Dental Billing Services", "Dental Insurance Verification", "Dental Credentialing"].map((tab, i) => (
+              <motion.button
+                key={tab}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="px-8 py-3.5 rounded-xl bg-white border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all shadow-sm hover:shadow-lg"
+              >
+                {tab}
+              </motion.button>
+            ))}
+          </div>
+
+          {/* Pricing Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            {[
+              { size: "Small", price: "$300", subtitle: "Monthly", claims: "Up to 60 per month", featured: true },
+              { size: "Medium", price: "$450", subtitle: "Monthly", claims: "Up to 80 per month", featured: false },
+              { size: "Large", price: "$650", subtitle: "Monthly", claims: "Up to 110 per month", featured: false },
+              { size: "Enterprise", price: "$750", subtitle: "Monthly", claims: "Up to 150 per month", featured: false },
+              { size: "Special Package", price: "Custom", subtitle: "Contact Us", claims: "150+ per month", featured: false }
+            ].map((plan, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className={`relative rounded-2xl p-8 border-2 shadow-lg hover:shadow-2xl transition-all duration-300 group ${
+                  plan.featured 
+                    ? 'bg-gradient-to-br from-primary to-primary/90 text-white border-primary scale-105' 
+                    : 'bg-white border-slate-200 hover:border-primary/50'
+                }`}
+              >
+                {plan.featured && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-secondary text-white px-4 py-1 rounded-full text-xs font-bold">
+                    POPULAR
+                  </div>
+                )}
+                
+                <h3 className={`text-xl font-bold mb-6 ${plan.featured ? 'text-white' : 'text-dark'}`}>
+                  {plan.size}
+                </h3>
+                
+                <div className="mb-6">
+                  <div className={`text-5xl font-black mb-2 ${plan.featured ? 'text-white' : 'text-primary'}`}>
+                    {plan.price}
+                  </div>
+                  <p className={`text-sm font-semibold ${plan.featured ? 'text-white/80' : 'text-slate-500'}`}>
+                    {plan.subtitle}
+                  </p>
+                </div>
+                
+                <p className={`text-sm mb-8 ${plan.featured ? 'text-white/90' : 'text-slate-600'}`}>
+                  {plan.claims}
+                </p>
+                
+                <Link
+                  to="/contact"
+                  className={`block w-full py-3.5 rounded-xl font-bold transition-all text-center ${
+                    plan.featured 
+                      ? 'bg-white text-primary hover:bg-white/90 shadow-lg' 
+                      : 'bg-primary text-white hover:bg-primary/90'
+                  }`}
+                >
+                  GET STARTED
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── INSURANCE VERIFICATION PRICING ── */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black text-dark mb-6 leading-tight">
+              Insurance Verification <span className="text-primary italic">Pricing</span>
+            </h2>
+            <p className="text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed">
+              Percentage-based pricing for insurance collections
+            </p>
+          </div>
+
+          {/* Top 3 Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {[
+              { size: "Small", rate: "$1199", subtitle: "Monthly", condition: "If the office insurance collections are under $40,000 month", featured: true },
+              { size: "Medium", rate: "3.24%", subtitle: "Monthly", condition: "If the office insurance collections are between $40,000 and $100,000", featured: false },
+              { size: "Large", rate: "2.75%", subtitle: "Monthly", condition: "If the office insurance collections are between $100,000 and $150,000", featured: false }
+            ].map((plan, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className={`relative rounded-2xl p-8 border-2 shadow-lg hover:shadow-2xl transition-all duration-300 ${
+                  plan.featured 
+                    ? 'bg-gradient-to-br from-primary to-primary/90 text-white border-primary' 
+                    : 'bg-white border-slate-200 hover:border-primary/50'
+                }`}
+              >
+                {plan.featured && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-secondary text-white px-4 py-1 rounded-full text-xs font-bold">
+                    BEST VALUE
+                  </div>
+                )}
+                
+                <h3 className={`text-xl font-bold mb-6 ${plan.featured ? 'text-white' : 'text-dark'}`}>
+                  {plan.size}
+                </h3>
+                
+                <div className="mb-6">
+                  <div className={`text-5xl font-black mb-2 ${plan.featured ? 'text-white' : 'text-primary'}`}>
+                    {plan.rate}
+                  </div>
+                  <p className={`text-sm font-semibold ${plan.featured ? 'text-white/80' : 'text-slate-500'}`}>
+                    {plan.subtitle}
+                  </p>
+                </div>
+                
+                <p className={`text-sm leading-relaxed ${plan.featured ? 'text-white/90' : 'text-slate-600'}`}>
+                  {plan.condition}
+                </p>
+                
+                <Link
+                  to="/contact"
+                  className={`block w-full mt-8 py-3.5 rounded-xl font-bold transition-all text-center ${
+                    plan.featured 
+                      ? 'bg-white text-primary hover:bg-white/90 shadow-lg' 
+                      : 'bg-primary text-white hover:bg-primary/90'
+                  }`}
+                >
+                  GET STARTED
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Bottom 3 Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { size: "Business", rate: "2.50%", subtitle: "Monthly", condition: "If the office insurance collections are between $150,000 and $200,000 per month" },
+              { size: "Enterprise", rate: "2%", subtitle: "Monthly", condition: "If the office insurance collections are over $200,000 month" },
+              { size: "Multi-Location / DSO", rate: "Custom", subtitle: "Contact Us", condition: "For multi-location dental practices, contact us for a tailored solution." }
+            ].map((plan, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 + 0.3 }}
+                className="bg-white rounded-2xl p-8 border-2 border-slate-200 shadow-lg hover:shadow-2xl hover:border-primary/50 transition-all duration-300"
+              >
+                <h3 className="text-xl font-bold mb-6 text-dark">{plan.size}</h3>
+                
+                <div className="mb-6">
+                  <div className="text-4xl font-black mb-2 text-primary">{plan.rate}</div>
+                  <p className="text-sm font-semibold text-slate-500">{plan.subtitle}</p>
+                </div>
+                
+                <p className="text-sm text-slate-600 leading-relaxed">{plan.condition}</p>
+                
+                <Link
+                  to="/contact"
+                  className="block w-full mt-8 py-3.5 rounded-xl font-bold bg-primary text-white hover:bg-primary/90 transition-all text-center"
+                >
+                  GET STARTED
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CREDENTIALING PRICING ── */}
+      <section className="py-24 bg-gradient-to-br from-slate-50 to-white">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black text-dark mb-6 leading-tight">
+              Dental Credentialing <span className="text-primary italic">Pricing</span>
+            </h2>
+            <p className="text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed">
+              Simple per-provider pricing for credentialing services
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[
+              { type: "Commercial", price: "$199", subtitle: "Per PPO commercial", featured: true },
+              { type: "HMO", price: "$299", subtitle: "Per insurance provider", featured: false }
+            ].map((plan, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.2 }}
+                className={`relative rounded-2xl p-12 border-2 shadow-xl hover:shadow-2xl transition-all duration-300 text-center ${
+                  plan.featured 
+                    ? 'bg-gradient-to-br from-primary to-primary/90 text-white border-primary scale-105' 
+                    : 'bg-white border-slate-200 hover:border-primary/50'
+                }`}
+              >
+                {plan.featured && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-secondary text-white px-4 py-1 rounded-full text-xs font-bold">
+                    RECOMMENDED
+                  </div>
+                )}
+                
+                <h3 className={`text-2xl font-bold mb-8 ${plan.featured ? 'text-white' : 'text-dark'}`}>
+                  {plan.type}
+                </h3>
+                
+                <div className="mb-8">
+                  <div className={`text-6xl font-black mb-3 ${plan.featured ? 'text-white' : 'text-primary'}`}>
+                    {plan.price}
+                  </div>
+                  <p className={`text-base font-semibold ${plan.featured ? 'text-white/80' : 'text-slate-500'}`}>
+                    {plan.subtitle}
+                  </p>
+                </div>
+                
+                <Link
+                  to="/contact"
+                  className={`block w-full py-4 rounded-xl font-bold text-lg transition-all text-center ${
+                    plan.featured 
+                      ? 'bg-white text-primary hover:bg-white/90 shadow-lg' 
+                      : 'bg-primary text-white hover:bg-primary/90'
+                  }`}
+                >
+                  GET STARTED
+                </Link>
               </motion.div>
             ))}
           </div>

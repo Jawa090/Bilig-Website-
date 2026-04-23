@@ -7,6 +7,8 @@ import SpecialitiesSection from "@/components/home/SpecialitiesSection";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import HowItWorks from "@/components/home/HowItWorks";
 import ProcessTabs from "@/components/home/ProcessTabs";
+import ResultsSection from "@/components/home/ResultsSection";
+import StrategicPartner from "@/components/home/StrategicPartner";
 import USACoverage from "@/components/home/USACoverage";
 import Testimonials from "@/components/home/Testimonials";
 import FAQ from "@/components/home/FAQ";
@@ -84,8 +86,10 @@ const Index = () => {
       <Hero />
       <StatsBar />
       <AboutIntro />
+      <ResultsSection />
       <ServicesSection />
       <SpecialitiesSection />
+      <StrategicPartner />
       <WhyChooseUs />
       <ProcessTabs />
       <HowItWorks />

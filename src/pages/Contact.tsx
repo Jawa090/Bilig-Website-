@@ -2,6 +2,8 @@ import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Lock, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Helmet } from "react-helmet-async";
 
 const contactInfo = [
   { icon: MapPin, label: "Our Office", value: "5900 Balcones Dr 18826, Austin, TX 78731", sub: "" },
@@ -12,9 +14,92 @@ const contactInfo = [
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", phone: "", practice: "", specialty: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://optimumsolution.com";
+  const canonical = `${origin}/contact/`;
+  const title = "Contact Us | Get Free Medical Billing Consultation | Optimum Solution";
+  const description = "Contact Optimum Solution for a free medical billing consultation. Call +1 (737) 307-6234 or visit our Austin, TX office. HIPAA-compliant communication, no obligation consultations.";
+  const keywords = "contact medical billing, free billing consultation, medical billing quote, RCM consultation, billing specialist contact, Austin TX medical billing";
+  const image = `${origin}/1.png`;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!form.name || !form.email || !form.phone) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields (Name, Email, Phone)",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('http://localhost:5001/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: form.name,
+          email: form.email,
+          phone: form.phone,
+          practiceName: form.practice,
+          specialty: form.specialty,
+          message: form.message,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Message Sent Successfully!",
+          description: "Thank you for contacting us. We'll get back to you within 24 hours.",
+        });
+        
+        // Reset form
+        setForm({ name: "", email: "", phone: "", practice: "", specialty: "", message: "" });
+      } else {
+        throw new Error(data.message || 'Failed to send message');
+      }
+    } catch (error) {
+      console.error('Contact form error:', error);
+      toast({
+        title: "Error Sending Message",
+        description: "Please try again later or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Layout>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={keywords} />
+        <meta name="robots" content="index,follow" />
+        <link rel="canonical" href={canonical} />
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={image} />
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+      </Helmet>
+
       <section className="bg-gradient-hero py-20 text-center">
         <div className="container mx-auto px-6">
           <p className="text-primary-foreground/60 text-sm mb-2">Home &gt; Contact</p>
@@ -32,7 +117,7 @@ const Contact = () => {
             className="bg-background rounded-2xl shadow-xl border p-8"
           >
             <h3 className="text-xl font-bold text-foreground mb-6">Send Us a Message</h3>
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label className="text-sm font-medium text-foreground mb-1 block">Full Name *</label>
                 <input type="text" required className="w-full px-4 py-3 rounded-xl border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
@@ -60,8 +145,12 @@ const Contact = () => {
                 <label className="text-sm font-medium text-foreground mb-1 block">Message</label>
                 <textarea rows={4} className="w-full px-4 py-3 rounded-xl border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none transition resize-none" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
               </div>
-              <button type="submit" className="w-full bg-gradient-green text-primary-foreground py-3 rounded-xl font-bold hover:scale-[1.02] transition-transform">
-                Send Message
+              <button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="w-full bg-gradient-green text-primary-foreground py-3 rounded-xl font-bold hover:scale-[1.02] transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Sending..." : "Send Message"}
               </button>
             </form>
 
