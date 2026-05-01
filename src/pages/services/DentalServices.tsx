@@ -613,6 +613,57 @@ const DentalServices = () => {
         </div>
       </section>
 
+      {/* ── GIVE YOUR PRACTICE A BOOST ── */}
+      <section className="py-24 bg-slate-50">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl md:text-4xl font-bold text-dark mb-4">Give Your Practice A Boost</h2>
+            <p className="text-slate-500 max-w-xl mx-auto">We will help your practice reach its highest potential.</p>
+          </div>
+
+          {/* Content */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            {[
+              {
+                title: "Dental SEO",
+                desc: "Our dental SEO experts will bring your website within reach of your potential patients, at no added cost of advertisement. Reach more patients looking out for dental treatments with EZDDS dental SEO services."
+              },
+              {
+                title: "Dental PPC Advertising",
+                desc: "We combine great SEO with smart dental PPC management (pay-per-click advertising) to get your website at the top of your potential patients' search results and bring newer patients into your clinic."
+              },
+              {
+                title: "Dental Website Development",
+                desc: "Get a stunning dental website design to captivates the visitors reading about your practice through your SEO and PPC. Our expert dental website designers create attractive and functional dental websites that quickly convert your visitors into patient appointments."
+              },
+              {
+                title: "Branding and Design",
+                desc: "EZDDS creates the logo and brand identity that is a true reflection of the values and vision of your dental practice. Distinguish yourself from your competition and attract more patients with incredible designs."
+              },
+              {
+                title: "Dental Social Media Marketing",
+                desc: "With latest techniques in social media for dental offices, EZDDS creates a social media dental marketing strategy designed to attract and convert potential patients near you."
+              }
+            ].map((service, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all text-center"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <Activity size={24} className="text-primary" />
+                </div>
+                <h3 className="font-bold text-dark text-base mb-3">{service.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{service.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── TESTIMONIALS ── */}
       <section className="py-24 bg-slate-50">
         <div className="container mx-auto px-6 max-w-6xl">
@@ -716,6 +767,8 @@ const DentalServices = () => {
           </div>
         </div>
       </section>
+
+
 
       {/* ── CTA ── */}
       <section className="py-24 bg-gradient-hero">

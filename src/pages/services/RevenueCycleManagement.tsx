@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import {
   RefreshCcw, Check, ArrowRight, DollarSign, TrendingUp,
   ShieldCheck, Clock, ChevronDown, ChevronUp, Users, BarChart3, Activity
@@ -69,16 +70,31 @@ const faqs = [
 const RevenueCycleManagement = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  useEffect(() => {
-    document.title = "Revenue Cycle Management Services | Optimum Billing Solutions";
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) {
-      meta.setAttribute("content", "End-to-end Revenue Cycle Management (RCM) services that maximize collections, reduce A/R days, and eliminate administrative burden for healthcare practices.");
-    }
-  }, []);
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://optimumsolution.com";
+  const canonical = `${origin}/services/revenue-cycle-management/`;
+  const title = "Revenue Cycle Management (RCM) Services | End-to-End Solutions | Optimum Solution";
+  const description = "End-to-end Revenue Cycle Management (RCM) services that maximize collections, reduce A/R days, and eliminate administrative burden for healthcare practices. 35% average revenue increase.";
+  const keywords = "revenue cycle management, RCM services, healthcare RCM, medical billing RCM, accounts receivable management, claim management, payment posting, denial management";
+  const image = `${origin}/1.png`;
 
   return (
     <Layout>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={keywords} />
+        <meta name="robots" content="index,follow,max-image-preview:large" />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={image} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+      </Helmet>
       {/* Hero */}
       <section className="bg-gradient-hero py-24 text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">

@@ -2,6 +2,7 @@ import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import {
   ArrowRight, CheckCircle2, Target, Eye, Handshake,
   Award, Users, MapPin, Calendar, ShieldCheck, TrendingUp, HeartPulse, Zap
@@ -54,8 +55,33 @@ const About = () => {
   const { ref: timelineRef, inView: timelineInView } = useInView({ triggerOnce: true, threshold: 0.1 });
   const { ref: valuesRef, inView: valuesInView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://optimumsolution.com";
+  const canonical = `${origin}/about/`;
+  const title = "About Us | Optimum Solution - Medical Billing Experts Since 2018";
+  const description = "Founded in 2018, Optimum Solution provides HIPAA-certified medical billing and RCM services to 100+ practices across all 50 states. AAPC certified, ISO 27001 compliant, NYS MBE certified.";
+  const keywords = "about optimum solution, medical billing company, RCM services, HIPAA certified billing, AAPC certified coders, ISO 27001, NYS minority business enterprise";
+  const image = `${origin}/1.png`;
+
   return (
     <Layout>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={keywords} />
+        <meta name="robots" content="index,follow,max-image-preview:large" />
+        <link rel="canonical" href={canonical} />
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={image} />
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+      </Helmet>
 
       {/* ── Hero ── */}
       <section className="relative bg-dark py-20 md:py-28 overflow-hidden">

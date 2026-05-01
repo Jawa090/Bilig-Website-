@@ -1,7 +1,9 @@
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Lock, ShieldCheck, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Helmet } from "react-helmet-async";
 
 const contactInfo = [
   { icon: MapPin, label: "Our Office", value: "5900 Balcones Dr 18826, Austin, TX 78731", sub: "" },
@@ -12,36 +14,114 @@ const contactInfo = [
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", phone: "", practice: "", specialty: "", message: "" });
-  const [status, setStatus] = useState({ loading: false, success: false, error: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  // Check for payment success
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get('success');
+    const plan = urlParams.get('plan');
+    const service = urlParams.get('service');
+    
+    if (success === 'true' && plan && service) {
+      toast({
+        title: "🎉 Payment Successful!",
+        description: `Thank you for subscribing to the ${plan} plan for ${decodeURIComponent(service)}. Our team will contact you within 24 hours to get started.`,
+        duration: 8000,
+      });
+      
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [toast]);
+
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://optimumsolution.com";
+  const canonical = `${origin}/contact/`;
+  const title = "Contact Us | Get Free Medical Billing Consultation | Optimum Solution";
+  const description = "Contact Optimum Solution for a free medical billing consultation. Call +1 (737) 307-6234 or visit our Austin, TX office. HIPAA-compliant communication, no obligation consultations.";
+  const keywords = "contact medical billing, free billing consultation, medical billing quote, RCM consultation, billing specialist contact, Austin TX medical billing";
+  const image = `${origin}/1.png`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus({ loading: true, success: false, error: "" });
+    
+    if (!form.name || !form.email || !form.phone) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields (Name, Email, Phone)",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/contact", {
-        method: "POST",
+      // Get API URL from environment variable
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+      
+      const response = await fetch(`${apiUrl}/api/contact`, {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          fullName: form.name,
+          email: form.email,
+          phone: form.phone,
+          practiceName: form.practice,
+          specialty: form.specialty,
+          message: form.message,
+        }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        setStatus({ loading: false, success: true, error: "" });
+        toast({
+          title: "✅ Message Sent Successfully!",
+          description: "Thank you for reaching out! Our billing specialist will review your inquiry and get back to you within 24 hours. Check your email for a confirmation.",
+        });
+        
+        // Reset form
         setForm({ name: "", email: "", phone: "", practice: "", specialty: "", message: "" });
-        setTimeout(() => setStatus(prev => ({ ...prev, success: false })), 5000);
       } else {
-        const data = await response.json();
-        throw new Error(data.message || "Something went wrong.");
+        throw new Error(data.message || 'Failed to send message');
       }
-    } catch (err: any) {
-      setStatus({ loading: false, success: false, error: err.message });
+    } catch (error) {
+      console.error('Contact form error:', error);
+      toast({
+        title: "Error Sending Message",
+        description: "Please try again later or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <Layout>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={keywords} />
+        <meta name="robots" content="index,follow" />
+        <link rel="canonical" href={canonical} />
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={image} />
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+      </Helmet>
+
       <section className="bg-gradient-hero py-20 text-center">
         <div className="container mx-auto px-6">
           <p className="text-primary-foreground/60 text-sm mb-2">Home &gt; Contact</p>
@@ -87,25 +167,22 @@ const Contact = () => {
                 <label className="text-sm font-medium text-foreground mb-1 block">Message</label>
                 <textarea rows={4} className="w-full px-4 py-3 rounded-xl border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none transition resize-none" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
               </div>
-
-              {status.error && (
-                <div className="p-3 rounded-lg bg-red-100 text-red-600 text-sm font-medium">
-                  {status.error}
-                </div>
-              )}
-
-              {status.success && (
-                <div className="p-3 rounded-lg bg-green-100 text-green-600 text-sm font-medium">
-                  Message sent successfully! We'll get back to you soon.
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={status.loading}
-                className="w-full bg-gradient-green text-primary-foreground py-3 rounded-xl font-bold hover:scale-[1.02] transition-transform disabled:opacity-70 disabled:hover:scale-100"
+              <button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="w-full bg-gradient-green text-primary-foreground py-3 rounded-xl font-bold hover:scale-[1.02] transition-transform disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                {status.loading ? "Sending..." : "Send Message"}
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Sending Your Message...
+                  </>
+                ) : (
+                  "Send Message"
+                )}
               </button>
             </form>
 

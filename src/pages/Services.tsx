@@ -2,6 +2,7 @@ import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { 
   ClipboardList, FileCode, RefreshCcw, BadgeCheck, XCircle, Search, Bot, 
   BarChart3, Check, ArrowRight, Activity, TrendingUp, Globe
@@ -88,8 +89,31 @@ const services = [
 ];
 
 const Services = () => {
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://optimumsolution.com";
+  const canonical = `${origin}/services/`;
+  const title = "Medical Billing Services | RCM, Coding, Credentialing | Optimum Solution";
+  const description = "Complete medical billing services: RCM, medical coding, credentialing, denial management, audits, virtual assistants, analytics. HIPAA certified, serving all 50 states.";
+  const keywords = "medical billing services, revenue cycle management, medical coding, credentialing services, denial management, medical audit, virtual assistant, analytics reporting";
+  const image = `${origin}/1.png`;
+
   return (
     <Layout>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={keywords} />
+        <meta name="robots" content="index,follow,max-image-preview:large" />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={image} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+      </Helmet>
       {/* Professional Hero Section - Restored original color */}
       <section className="bg-gradient-hero py-20 md:py-32 text-center">
         <div className="container mx-auto px-6">

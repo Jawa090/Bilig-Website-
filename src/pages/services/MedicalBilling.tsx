@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import {
   ClipboardList, Check, ArrowRight, DollarSign, TrendingUp,
   ShieldCheck, Clock, ChevronDown, ChevronUp, Star, Users, FileText
@@ -85,16 +86,31 @@ const faqs = [
 const MedicalBilling = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  useEffect(() => {
-    document.title = "Medical Billing Services | Optimum Billing Solutions";
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) {
-      meta.setAttribute("content", "Professional medical billing services that maximize reimbursement, reduce denials, and accelerate cash flow for healthcare practices of all sizes.");
-    }
-  }, []);
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://optimumsolution.com";
+  const canonical = `${origin}/services/medical-billing/`;
+  const title = "Medical Billing Services | Maximize Revenue & Reduce Denials | Optimum Solution";
+  const description = "Professional medical billing services that maximize reimbursement, reduce denials, and accelerate cash flow for healthcare practices of all sizes. 98% first-pass clean claim rate.";
+  const keywords = "medical billing services, healthcare billing, claim management, revenue cycle, denial management, medical billing company, practice billing, insurance claims";
+  const image = `${origin}/1.png`;
 
   return (
     <Layout>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={keywords} />
+        <meta name="robots" content="index,follow,max-image-preview:large" />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={image} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+      </Helmet>
       {/* Hero */}
       <section className="bg-gradient-hero py-24 text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">

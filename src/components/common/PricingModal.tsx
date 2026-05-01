@@ -27,12 +27,14 @@ const plans = [
     description: "Perfect for small practices",
     color: "from-slate-500 to-slate-700",
     badge: null,
+    stripePriceId: "price_1TPRfnJeNkSHRY7NGnRTDjgX",
     features: [
       "Up to 500 claims/month",
-      "Basic denial management",
+      "All basic services included",
       "Email support",
       "Monthly reports",
-      "1 provider setup",
+      "1-3 providers setup",
+      "Standard turnaround time",
     ],
   },
   {
@@ -43,31 +45,37 @@ const plans = [
     description: "Most popular for growing clinics",
     color: "from-primary to-primary-dark",
     badge: "Most Popular",
+    stripePriceId: "price_1TPRfMJeNkSHRY7N2XLlEk6Z",
     features: [
       "Up to 2,000 claims/month",
-      "Advanced denial management",
+      "All premium services included",
       "Priority support 24/7",
       "Weekly analytics reports",
-      "Up to 5 providers",
+      "Up to 10 providers",
       "Credentialing assistance",
+      "Dedicated account manager",
+      "Advanced denial management",
     ],
   },
   {
     id: "enterprise",
     name: "Enterprise",
-    price: 1199,
+    price: 999,
     period: "/ month",
     description: "For large healthcare groups",
     color: "from-secondary to-secondary-dark",
     badge: "Best Value",
+    stripePriceId: "price_1TPRexJeNkSHRY7Ne86AdxoE",
     features: [
-      "Unlimited claims",
-      "Full RCM suite",
-      "Dedicated account manager",
+      "Unlimited claims processing",
+      "Complete RCM suite",
+      "Dedicated billing team",
       "Real-time dashboards",
       "Unlimited providers",
       "Custom integrations",
-      "Audit & compliance",
+      "Audit & compliance support",
+      "Multi-location management",
+      "White-label reporting",
     ],
   },
 ];
@@ -91,12 +99,51 @@ const PricingModal = ({ isOpen, onClose, serviceName, serviceIcon: ServiceIcon }
     return clean.length >= 3 ? `${clean.slice(0, 2)}/${clean.slice(2)}` : clean;
   };
 
-  const handlePay = () => {
+  const handlePay = async () => {
     setProcessing(true);
-    setTimeout(() => {
+    
+    try {
+      const selectedPlanData = plans.find(p => p.id === selectedPlan);
+      if (!selectedPlanData) {
+        throw new Error('Selected plan not found');
+      }
+
+      // Get API URL from environment variable
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+
+      // Create checkout session via backend API
+      const response = await fetch(`${apiUrl}/api/stripe/create-checkout-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          priceId: selectedPlanData.stripePriceId,
+          serviceName: serviceName,
+          planName: selectedPlan,
+          successUrl: `${window.location.origin}/contact/?success=true&plan=${selectedPlan}&service=${encodeURIComponent(serviceName)}`,
+          cancelUrl: `${window.location.origin}/?canceled=true`
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Failed to create checkout session');
+      }
+
+      // Redirect to Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+
+    } catch (error) {
+      console.error('Payment error:', error);
       setProcessing(false);
-      setSuccess(true);
-    }, 2200);
+      alert(`Payment failed: ${error.message}. Please try again.`);
+    }
   };
 
   const handleClose = () => {
@@ -228,7 +275,12 @@ const PricingModal = ({ isOpen, onClose, serviceName, serviceIcon: ServiceIcon }
                     <div className="flex items-center justify-between bg-muted/50 rounded-2xl p-4">
                       <div>
                         <p className="font-semibold text-foreground">Selected: <span className="text-primary">{chosen.name} Plan</span></p>
-                        <p className="text-sm text-muted-foreground">${chosen.price}/month · Billed monthly · Cancel anytime</p>
+                        <p className="text-sm text-muted-foreground">
+                          ${chosen.price}/month for {serviceName} · Billed monthly · Cancel anytime
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          ✨ Includes all features for {serviceName.toLowerCase()}
+                        </p>
                       </div>
                       <button
                         onClick={() => setStep("payment")}
