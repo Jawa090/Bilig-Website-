@@ -83,21 +83,10 @@ const plans = [
 const PricingModal = ({ isOpen, onClose, serviceName, serviceIcon: ServiceIcon }: PricingModalProps) => {
   const [selectedPlan, setSelectedPlan] = useState("professional");
   const [step, setStep] = useState<"plans" | "payment">("plans");
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [cvv, setCvv] = useState("");
-  const [cardName, setCardName] = useState("");
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
 
   const chosen = plans.find((p) => p.id === selectedPlan)!;
-
-  const formatCard = (val: string) =>
-    val.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim();
-  const formatExpiry = (val: string) => {
-    const clean = val.replace(/\D/g, "").slice(0, 4);
-    return clean.length >= 3 ? `${clean.slice(0, 2)}/${clean.slice(2)}` : clean;
-  };
 
   const handlePay = async () => {
     setProcessing(true);
@@ -151,10 +140,6 @@ const PricingModal = ({ isOpen, onClose, serviceName, serviceIcon: ServiceIcon }
     setTimeout(() => {
       setStep("plans");
       setSuccess(false);
-      setCardNumber("");
-      setExpiry("");
-      setCvv("");
-      setCardName("");
       setSelectedPlan("professional");
     }, 300);
   };
@@ -342,80 +327,15 @@ const PricingModal = ({ isOpen, onClose, serviceName, serviceIcon: ServiceIcon }
                       <div className="md:col-span-3">
                         <p className="font-bold text-foreground mb-4 flex items-center gap-2">
                           <CreditCard size={18} className="text-primary" />
-                          Payment Details
+                          Checkout Details
                         </p>
 
-                        {/* Visual Card Preview */}
-                        <div className="relative h-40 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-5 mb-5 overflow-hidden shadow-xl">
-                          <div className="absolute -top-8 -right-8 w-36 h-36 bg-white/5 rounded-full" />
-                          <div className="absolute -bottom-10 -left-10 w-44 h-44 bg-white/5 rounded-full" />
-                          <div className="flex justify-between items-start relative z-10">
-                            <div className="flex gap-1">
-                              <div className="w-8 h-8 bg-yellow-400 rounded-full opacity-90" />
-                              <div className="w-8 h-8 bg-orange-500 rounded-full opacity-70 -ml-3" />
-                            </div>
-                            <span className="text-white/60 text-xs font-mono">VISA</span>
-                          </div>
-                          <div className="mt-4 relative z-10">
-                            <p className="text-white font-mono text-base tracking-[0.2em]">
-                              {cardNumber || "•••• •••• •••• ••••"}
-                            </p>
-                          </div>
-                          <div className="flex justify-between items-end mt-2 relative z-10">
-                            <div>
-                              <p className="text-white/40 text-[10px] uppercase">Card Holder</p>
-                              <p className="text-white text-xs font-medium">{cardName || "YOUR NAME"}</p>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-white/40 text-[10px] uppercase">Expires</p>
-                              <p className="text-white text-xs font-medium">{expiry || "MM/YY"}</p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="space-y-3">
-                          <div>
-                            <label className="text-xs font-semibold text-foreground/70 mb-1 block">Card Number</label>
-                            <input
-                              type="text"
-                              value={cardNumber}
-                              onChange={(e) => setCardNumber(formatCard(e.target.value))}
-                              placeholder="1234 5678 9012 3456"
-                              className="w-full px-4 py-3 rounded-xl border border-border bg-muted/30 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-xs font-semibold text-foreground/70 mb-1 block">Cardholder Name</label>
-                            <input
-                              type="text"
-                              value={cardName}
-                              onChange={(e) => setCardName(e.target.value)}
-                              placeholder="John Doe"
-                              className="w-full px-4 py-3 rounded-xl border border-border bg-muted/30 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-                            />
-                          </div>
-                          <div className="grid grid-cols-2 gap-3">
-                            <div>
-                              <label className="text-xs font-semibold text-foreground/70 mb-1 block">Expiry Date</label>
-                              <input
-                                type="text"
-                                value={expiry}
-                                onChange={(e) => setExpiry(formatExpiry(e.target.value))}
-                                placeholder="MM/YY"
-                                className="w-full px-4 py-3 rounded-xl border border-border bg-muted/30 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-                              />
-                            </div>
-                            <div>
-                              <label className="text-xs font-semibold text-foreground/70 mb-1 block">CVV</label>
-                              <input
-                                type="password"
-                                value={cvv}
-                                onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                                placeholder="•••"
-                                className="w-full px-4 py-3 rounded-xl border border-border bg-muted/30 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-                              />
-                            </div>
-                          </div>
+                        <div className="bg-muted/30 rounded-2xl p-6 text-center border border-border">
+                          <Lock size={32} className="text-primary mx-auto mb-3" />
+                          <h4 className="text-lg font-bold text-foreground mb-2">Secure Stripe Checkout</h4>
+                          <p className="text-sm text-muted-foreground mb-6">
+                            You will be redirected to Stripe to complete your payment securely. We do not store your credit card information on our servers.
+                          </p>
 
                           <button
                             onClick={handlePay}
@@ -428,12 +348,11 @@ const PricingModal = ({ isOpen, onClose, serviceName, serviceIcon: ServiceIcon }
                                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                                 </svg>
-                                Processing…
+                                Redirecting to Stripe…
                               </>
                             ) : (
                               <>
-                                <Lock size={15} />
-                                Pay ${chosen.price} Securely
+                                Proceed to Stripe Checkout (${chosen.price})
                               </>
                             )}
                           </button>
