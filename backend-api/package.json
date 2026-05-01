@@ -1,0 +1,34 @@
+{
+  "name": "backend-biligwebsite",
+  "version": "1.0.0",
+  "description": "Backend API for Medical Billing Website - Contact Form (No Database)",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [
+    "medical-billing",
+    "healthcare",
+    "api",
+    "express",
+    "contact-form"
+  ],
+  "author": "Optimum Solution",
+  "license": "ISC",
+  "dependencies": {
+    "compression": "^1.8.1",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "express-rate-limit": "^7.5.1",
+    "express-validator": "^7.3.2",
+    "helmet": "^7.2.0",
+    "morgan": "^1.10.1",
+    "nodemailer": "^6.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

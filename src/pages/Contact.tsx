@@ -12,6 +12,33 @@ const contactInfo = [
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", phone: "", practice: "", specialty: "", message: "" });
+  const [status, setStatus] = useState({ loading: false, success: false, error: "" });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus({ loading: true, success: false, error: "" });
+
+    try {
+      const response = await fetch("http://localhost:5000/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (response.ok) {
+        setStatus({ loading: false, success: true, error: "" });
+        setForm({ name: "", email: "", phone: "", practice: "", specialty: "", message: "" });
+        setTimeout(() => setStatus(prev => ({ ...prev, success: false })), 5000);
+      } else {
+        const data = await response.json();
+        throw new Error(data.message || "Something went wrong.");
+      }
+    } catch (err: any) {
+      setStatus({ loading: false, success: false, error: err.message });
+    }
+  };
 
   return (
     <Layout>
@@ -32,7 +59,7 @@ const Contact = () => {
             className="bg-background rounded-2xl shadow-xl border p-8"
           >
             <h3 className="text-xl font-bold text-foreground mb-6">Send Us a Message</h3>
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label className="text-sm font-medium text-foreground mb-1 block">Full Name *</label>
                 <input type="text" required className="w-full px-4 py-3 rounded-xl border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
@@ -60,8 +87,25 @@ const Contact = () => {
                 <label className="text-sm font-medium text-foreground mb-1 block">Message</label>
                 <textarea rows={4} className="w-full px-4 py-3 rounded-xl border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none transition resize-none" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
               </div>
-              <button type="submit" className="w-full bg-gradient-green text-primary-foreground py-3 rounded-xl font-bold hover:scale-[1.02] transition-transform">
-                Send Message
+
+              {status.error && (
+                <div className="p-3 rounded-lg bg-red-100 text-red-600 text-sm font-medium">
+                  {status.error}
+                </div>
+              )}
+
+              {status.success && (
+                <div className="p-3 rounded-lg bg-green-100 text-green-600 text-sm font-medium">
+                  Message sent successfully! We'll get back to you soon.
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={status.loading}
+                className="w-full bg-gradient-green text-primary-foreground py-3 rounded-xl font-bold hover:scale-[1.02] transition-transform disabled:opacity-70 disabled:hover:scale-100"
+              >
+                {status.loading ? "Sending..." : "Send Message"}
               </button>
             </form>
 

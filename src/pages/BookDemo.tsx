@@ -14,6 +14,36 @@ const BookDemo = () => {
     name: "", email: "", phone: "", practice: "", specialty: "",
     providers: "", volume: "", ehr: "", billingSetup: "", time: "", notes: "",
   });
+  const [status, setStatus] = useState({ loading: false, success: false, error: "" });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus({ loading: true, success: false, error: "" });
+
+    try {
+      const response = await fetch("http://localhost:5000/api/book-demo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (response.ok) {
+        setStatus({ loading: false, success: true, error: "" });
+        setForm({
+          name: "", email: "", phone: "", practice: "", specialty: "",
+          providers: "", volume: "", ehr: "", billingSetup: "", time: "", notes: "",
+        });
+        setTimeout(() => setStatus(prev => ({ ...prev, success: false })), 5000);
+      } else {
+        const data = await response.json();
+        throw new Error(data.message || "Something went wrong.");
+      }
+    } catch (err: any) {
+      setStatus({ loading: false, success: false, error: err.message });
+    }
+  };
 
   return (
     <Layout>
@@ -52,7 +82,7 @@ const BookDemo = () => {
             className="bg-background rounded-3xl shadow-2xl p-8 md:p-10 text-left"
           >
             <h3 className="text-lg font-bold text-foreground mb-6">Tell Us About Your Practice</h3>
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm font-medium text-foreground mb-1 block">Full Name *</label>
@@ -118,8 +148,25 @@ const BookDemo = () => {
                 <label className="text-sm font-medium text-foreground mb-1 block">Anything specific you want us to review?</label>
                 <textarea rows={3} placeholder="e.g., High denial rate on modifier 25 claims" className="w-full px-4 py-3 rounded-xl border bg-background text-foreground focus:ring-2 focus:ring-primary outline-none transition resize-none" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
               </div>
-              <button type="submit" className="w-full bg-gradient-green text-primary-foreground py-4 rounded-xl font-bold text-lg hover:scale-[1.02] transition-transform mt-2">
-                Schedule My Free Revenue Audit →
+
+              {status.error && (
+                <div className="p-3 rounded-lg bg-red-100 text-red-600 text-sm font-medium">
+                  {status.error}
+                </div>
+              )}
+
+              {status.success && (
+                <div className="p-3 rounded-lg bg-green-100 text-green-600 text-sm font-medium">
+                  Audit request scheduled successfully! We'll contact you shortly.
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={status.loading}
+                className="w-full bg-gradient-green text-primary-foreground py-4 rounded-xl font-bold text-lg hover:scale-[1.02] transition-transform mt-2 disabled:opacity-70 disabled:hover:scale-100"
+              >
+                {status.loading ? "Scheduling..." : "Schedule My Free Revenue Audit →"}
               </button>
             </form>
           </motion.div>
